@@ -1,4 +1,4 @@
-RISC-V Rocket Chip on Xilinx ZYNQ Ultrascale+ ZCU102 
+RISC-V Rocket Chip on Xilinx ZYNQ Ultrascale+ ZCU102 (Rev1.1 & MTA4ATF51264HZ-2G6E1)
 ===================================================
 
 ### About this repository
