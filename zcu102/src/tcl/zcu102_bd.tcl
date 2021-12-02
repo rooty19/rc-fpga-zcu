@@ -20,7 +20,7 @@ set script_folder [_tcl::get_script_folder]
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2017.1
+set scripts_vivado_version 2020.2
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -43,8 +43,8 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 set list_projs [get_projects -quiet]
 if { $list_projs eq "" } {
-   create_project project_1 myproj -part xczu9eg-ffvb1156-2-i
-   set_property BOARD_PART xilinx.com:zcu102:part0:3.0 [current_project]
+   create_project project_1 myproj -part xczu9eg-ffvb1156-2-e
+   set_property BOARD_PART xilinx.com:zcu102:part0:3.4 [current_project]
 }
 
 
@@ -164,8 +164,8 @@ CONFIG.PROTOCOL {AXI4} \
   set S_AXI [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 S_AXI ]
   set_property -dict [ list \
 CONFIG.ADDR_WIDTH {32} \
-CONFIG.ARUSER_WIDTH {0} \
-CONFIG.AWUSER_WIDTH {0} \
+CONFIG.ARUSER_WIDTH {1} \
+CONFIG.AWUSER_WIDTH {1} \
 CONFIG.BUSER_WIDTH {0} \
 CONFIG.DATA_WIDTH {64} \
 CONFIG.FREQ_HZ {180000000} \
@@ -222,8 +222,8 @@ CONFIG.NUM_MI {1} \
 CONFIG.C_AUX_RESET_HIGH {0} \
  ] $proc_sys_reset_0
 
-  # Create instance: processing_system7_0, and set properties
-  set processing_system7_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.0 processing_system7_0 ]
+  # Create instance: zynq_ultra_ps_e_0, and set properties
+  set zynq_ultra_ps_e_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.3 zynq_ultra_ps_e_0 ]
   set_property -dict [ list \
 CONFIG.PSU_BANK_0_IO_STANDARD {LVCMOS18} \
 CONFIG.PSU_BANK_1_IO_STANDARD {LVCMOS18} \
@@ -301,7 +301,7 @@ CONFIG.PSU__CRL_APB__USB0_BUS_REF_CTRL__SRCSEL {IOPLL} \
 CONFIG.PSU__CRL_APB__USB3_DUAL_REF_CTRL__FREQMHZ {20} \
 CONFIG.PSU__CRL_APB__USB3_DUAL_REF_CTRL__SRCSEL {IOPLL} \
 CONFIG.PSU__DDRC__BANK_ADDR_COUNT {2} \
-CONFIG.PSU__DDRC__BG_ADDR_COUNT {2} \
+CONFIG.PSU__DDRC__BG_ADDR_COUNT {1} \
 CONFIG.PSU__DDRC__BRC_MAPPING {ROW_BANK_COL} \
 CONFIG.PSU__DDRC__BUS_WIDTH {64 Bit} \
 CONFIG.PSU__DDRC__CL {15} \
@@ -314,10 +314,10 @@ CONFIG.PSU__DDRC__DDR4_CAL_MODE_ENABLE {0} \
 CONFIG.PSU__DDRC__DDR4_CRC_CONTROL {0} \
 CONFIG.PSU__DDRC__DDR4_T_REF_MODE {0} \
 CONFIG.PSU__DDRC__DDR4_T_REF_RANGE {Normal (0-85)} \
-CONFIG.PSU__DDRC__DEVICE_CAPACITY {4096 MBits} \
+CONFIG.PSU__DDRC__DEVICE_CAPACITY {8192 MBits} \
 CONFIG.PSU__DDRC__DIMM_ADDR_MIRROR {0} \
 CONFIG.PSU__DDRC__DM_DBI {DM_NO_DBI} \
-CONFIG.PSU__DDRC__DRAM_WIDTH {8 Bits} \
+CONFIG.PSU__DDRC__DRAM_WIDTH {16 Bits} \
 CONFIG.PSU__DDRC__ECC {Disabled} \
 CONFIG.PSU__DDRC__ENABLE {1} \
 CONFIG.PSU__DDRC__FGRM {1X} \
@@ -327,7 +327,7 @@ CONFIG.PSU__DDRC__PARITY_ENABLE {0} \
 CONFIG.PSU__DDRC__PER_BANK_REFRESH {0} \
 CONFIG.PSU__DDRC__PHY_DBI_MODE {0} \
 CONFIG.PSU__DDRC__RANK_ADDR_COUNT {0} \
-CONFIG.PSU__DDRC__ROW_ADDR_COUNT {15} \
+CONFIG.PSU__DDRC__ROW_ADDR_COUNT {16} \
 CONFIG.PSU__DDRC__SELF_REF_ABORT {0} \
 CONFIG.PSU__DDRC__SPEED_BIN {DDR4_2133P} \
 CONFIG.PSU__DDRC__STATIC_RD_MODE {0} \
@@ -439,26 +439,26 @@ CONFIG.PSU__USE__M_AXI_GP1 {0} \
 CONFIG.PSU__USE__M_AXI_GP2 {0} \
 CONFIG.PSU__USE__S_AXI_GP0 {0} \
 CONFIG.PSU__USE__S_AXI_GP3 {1} \
- ] $processing_system7_0
+ ] $zynq_ultra_ps_e_0
 
   # Create interface connections
   connect_bd_intf_net -intf_net S_AXI_1 [get_bd_intf_ports S_AXI] [get_bd_intf_pins axi_interconnect_1/S00_AXI]
   connect_bd_intf_net -intf_net axi_interconnect_0_M00_AXI [get_bd_intf_ports M_AXI] [get_bd_intf_pins axi_interconnect_0/M00_AXI]
-  connect_bd_intf_net -intf_net axi_interconnect_1_M00_AXI [get_bd_intf_pins axi_interconnect_1/M00_AXI] [get_bd_intf_pins processing_system7_0/S_AXI_HP1_FPD]
-  connect_bd_intf_net -intf_net processing_system7_0_M_AXI_HPM0_FPD [get_bd_intf_pins axi_interconnect_0/S00_AXI] [get_bd_intf_pins processing_system7_0/M_AXI_HPM0_FPD]
+  connect_bd_intf_net -intf_net axi_interconnect_1_M00_AXI [get_bd_intf_pins axi_interconnect_1/M00_AXI] [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP1_FPD]
+  connect_bd_intf_net -intf_net zynq_ultra_ps_e_0_M_AXI_HPM0_FPD [get_bd_intf_pins axi_interconnect_0/S00_AXI] [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM0_FPD]
 
   # Create port connections
-  connect_bd_net -net ext_clk_in_1 [get_bd_ports ext_clk_in] [get_bd_pins axi_interconnect_0/ACLK] [get_bd_pins axi_interconnect_0/M00_ACLK] [get_bd_pins axi_interconnect_0/S00_ACLK] [get_bd_pins axi_interconnect_1/ACLK] [get_bd_pins axi_interconnect_1/M00_ACLK] [get_bd_pins axi_interconnect_1/S00_ACLK] [get_bd_pins proc_sys_reset_0/slowest_sync_clk] [get_bd_pins processing_system7_0/maxihpm0_fpd_aclk] [get_bd_pins processing_system7_0/saxihp1_fpd_aclk]
+  connect_bd_net -net ext_clk_in_1 [get_bd_ports ext_clk_in] [get_bd_pins axi_interconnect_0/ACLK] [get_bd_pins axi_interconnect_0/M00_ACLK] [get_bd_pins axi_interconnect_0/S00_ACLK] [get_bd_pins axi_interconnect_1/ACLK] [get_bd_pins axi_interconnect_1/M00_ACLK] [get_bd_pins axi_interconnect_1/S00_ACLK] [get_bd_pins proc_sys_reset_0/slowest_sync_clk] [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk] [get_bd_pins zynq_ultra_ps_e_0/saxihp1_fpd_aclk]
   connect_bd_net -net proc_sys_reset_0_interconnect_aresetn [get_bd_pins axi_interconnect_0/ARESETN] [get_bd_pins axi_interconnect_1/ARESETN] [get_bd_pins proc_sys_reset_0/interconnect_aresetn]
   connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins axi_interconnect_0/M00_ARESETN] [get_bd_pins axi_interconnect_0/S00_ARESETN] [get_bd_pins axi_interconnect_1/M00_ARESETN] [get_bd_pins axi_interconnect_1/S00_ARESETN] [get_bd_pins proc_sys_reset_0/peripheral_aresetn]
-  connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_ports FCLK_RESET0_N] [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins processing_system7_0/pl_resetn0]
+  connect_bd_net -net zynq_ultra_ps_e_0_FCLK_RESET0_N [get_bd_ports FCLK_RESET0_N] [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
 
   # Create address segments
-  create_bd_addr_seg -range 0x00001000 -offset 0xA0000000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs M_AXI/Reg] SEG_M_AXI_Reg
-  create_bd_addr_seg -range 0x20000000 -offset 0x00000000 [get_bd_addr_spaces S_AXI] [get_bd_addr_segs processing_system7_0/SAXIGP3/HP1_DDR_LOW] SEG_processing_system7_0_HP1_DDR_LOW
-  create_bd_addr_seg -range 0x01000000 -offset 0xFF000000 [get_bd_addr_spaces S_AXI] [get_bd_addr_segs processing_system7_0/SAXIGP3/HP1_LPS_OCM] SEG_processing_system7_0_HP1_LPS_OCM
-  create_bd_addr_seg -range 0x10000000 -offset 0xE0000000 [get_bd_addr_spaces S_AXI] [get_bd_addr_segs processing_system7_0/SAXIGP3/HP1_PCIE_LOW] SEG_processing_system7_0_HP1_PCIE_LOW
-  create_bd_addr_seg -range 0x20000000 -offset 0xC0000000 [get_bd_addr_spaces S_AXI] [get_bd_addr_segs processing_system7_0/SAXIGP3/HP1_QSPI] SEG_processing_system7_0_HP1_QSPI
+  create_bd_addr_seg -range 0x00001000 -offset 0xA0000000 [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs M_AXI/Reg] SEG_M_AXI_Reg
+  create_bd_addr_seg -range 0x20000000 -offset 0x00000000 [get_bd_addr_spaces S_AXI] [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP3/HP1_DDR_LOW] SEG_zynq_ultra_ps_e_0_HP1_DDR_LOW
+  create_bd_addr_seg -range 0x01000000 -offset 0xFF000000 [get_bd_addr_spaces S_AXI] [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP3/HP1_LPS_OCM] SEG_zynq_ultra_ps_e_0_HP1_LPS_OCM
+  create_bd_addr_seg -range 0x10000000 -offset 0xE0000000 [get_bd_addr_spaces S_AXI] [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP3/HP1_PCIE_LOW] SEG_zynq_ultra_ps_e_0_HP1_PCIE_LOW
+  create_bd_addr_seg -range 0x20000000 -offset 0xC0000000 [get_bd_addr_spaces S_AXI] [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP3/HP1_QSPI] SEG_zynq_ultra_ps_e_0_HP1_QSPI
 
 
   # Restore current instance

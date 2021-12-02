@@ -1,10 +1,12 @@
-RISC-V Rocket Chip on Xilinx ZYNQ Ultrascale+ ZCU102 (Rev1.1 & MTA4ATF51264HZ-2G6E1)
+RISC-V Rocket Chip on Xilinx ZYNQ Ultrascale+ ZCU102
 ===================================================
+### this repo is for ZCU102 (Rev1.0+ & MTA4ATF51264HZ-2G6E1 DDR4-module) and Vivado/Vitis 2020.2
 
+---
 ### About this repository
 This is a ZCU102 port of RISC-V on FPGA [zynq-fpga](https://github.com/ucb-bar/fpga-zynq). ZCU102 can at least accommodate quad-RISC-V-core rocket-chip. The rocket chip version of this repository is same as the orginal one, which is at this April 2018 [commit](https://github.com/chipsalliance/rocket-chip/commit/7cd3352c3b802c3c50cb864aee828c6106414bb3). New rocket chip versions can be found in the mainstream rocket chip [repository](https://github.com/chipsalliance/rocket-chip).
 
-On ZCU102, clock frequency (clock speed) can reach 195 MHz for single core config with Vivado v2017.1.  
+On ZCU102, clock frequency (clock speed) can reach 195 MHz for single core config with Vivado `v2020.2`.  
 Please refer to [online doc](https://github.com/li3tuo4/rc-zcu102-tutorial/blob/master/quickstart.pdf) for how to use this repository. 
 **NB I recently removed the sed command in [riscv-tools/build.sh](https://github.com/li3tuo4/riscv-tools-zcu/blob/434fdeb0f863afd7b083b57bba923da9bc98d9a6/build.sh#L11),
 because it's unreliable across host OS environment.**
@@ -20,18 +22,18 @@ The current flow has been tested in the following host environment:
 
 Software | Version 
 ---|---
-OS |`16.04.1-Ubuntu` with `4.15.0-64-generic` kernel
-Bash | `4.3.48`
+OS |`18.04.1-Ubuntu` with `5.4.0-91-generic` kernel
+Bash | `4.4.20`
 Make | `4.1`
-sed | `4.2.2`
-Vivado | `v2017.1` 
-Petalinux |  `2017.1`
+sed | `4.4`
+Vivado/Vitis | `v2020.2` 
+~~Petalinux |  `2017.1`~~ (Petalinux is't used.)
 
 This flow differs to the original flow ([zynq-fpga](https://github.com/ucb-bar/fpga-zynq)) in ARM Linux generation, Vivado version (for supporting this FPGA), hardware modfication (ZCU102 has different PS architecture), SD card preparation, and minor changes in software stack. 
 
 Please feel free to contribute. Please let me know if you meet any problem. 
 
-### Issues with new zcu102 board
+### Issues with new zcu102 board (Resolved)
 If you are using a newer zcu102 (even with the same revision number) with this repo and get stuck at the FSBL stage during boot up, you might have encountered this [issue](https://www.xilinx.com/support/answers/71961.html). If so, please try to follow these [steps](https://github.com/li3tuo4/rc-fpga-zcu/issues/5#issuecomment-579228327) where necessary.
 
 ### This port (rocket chip on ZCU102) has been used by the following publication:
